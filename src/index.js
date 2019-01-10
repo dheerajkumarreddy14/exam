@@ -1,12 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import {BrowserRouter , Route, Switch} from 'react-router-dom';
+import thunk from 'redux-thunk';
+import App from './components/App';
+import rootReducer from './reducers';
+import showId from './components/post_show';
+import Post from './components/post_create';
 
-ReactDOM.render(<App />, document.getElementById('root'));
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const store = createStore(rootReducer, applyMiddleware(thunk));
+console.log('store.getSate()',store.getState());
+ReactDOM.render(<Provider store = {store}>
+<BrowserRouter>
+<div>
+      <Switch>
+      
+      <Route path = "/api/book/isbn/:isbn" component={showId}/>
+      <Route path = "/api/book" component={Post}/>
+      <Route path = "/api/books" component={App}/>
+      </Switch>
+      </div>
+</BrowserRouter>
+    <App />
+    </Provider>,
+     document.getElementById('root'));
+
